@@ -1,0 +1,48 @@
+{
+  "version": "39.0.0",
+  "files": {
+    "941942dbd4a219dfc8b57c160f235493a4a7919405d6841ac512d2a1c9fb6e82": {
+      "source": {
+        "path": "/home/kromashk/Documents/exam_api/ewd-2025-exam-serverlessAPI",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-eu-west-1": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-eu-west-1",
+          "objectKey": "941942dbd4a219dfc8b57c160f235493a4a7919405d6841ac512d2a1c9fb6e82.zip",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-eu-west-1"
+        }
+      }
+    },
+    "ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a": {
+      "source": {
+        "path": "asset.ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-eu-west-1": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-eu-west-1",
+          "objectKey": "ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a.zip",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-eu-west-1"
+        }
+      }
+    },
+    "0c1d58f7dbbeab3591a658e740baadf8716369c5123a8ef3dfc90230fbb18866": {
+      "source": {
+        "path": "ExamStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-eu-west-1": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-eu-west-1",
+          "objectKey": "0c1d58f7dbbeab3591a658e740baadf8716369c5123a8ef3dfc90230fbb18866.json",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-eu-west-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

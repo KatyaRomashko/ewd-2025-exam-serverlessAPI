@@ -1,0 +1,379 @@
+{
+ "Resources": {
+  "CinemasTableA8D14F5B": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "cinemaId",
+      "AttributeType": "N"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "cinemaId",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "CinemaTable"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/CinemasTable/Resource"
+   }
+  },
+  "QuestionFnServiceRoleDE3F6CFB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/QuestionFn/ServiceRole/Resource"
+   }
+  },
+  "QuestionFnF3745575": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-eu-west-1"
+     },
+     "S3Key": "941942dbd4a219dfc8b57c160f235493a4a7919405d6841ac512d2a1c9fb6e82.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "REGION": "eu-west-1"
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 128,
+    "Role": {
+     "Fn::GetAtt": [
+      "QuestionFnServiceRoleDE3F6CFB",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "QuestionFnServiceRoleDE3F6CFB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/QuestionFn/Resource",
+    "aws:asset:path": "/home/kromashk/Documents/exam_api/ewd-2025-exam-serverlessAPI",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "moviesddbInitDataA13BB07E": {
+   "Type": "Custom::AWS",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "AWS679f53fac002430cb0da5b7982bd22872D164C4C",
+      "Arn"
+     ]
+    },
+    "Create": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"service\":\"DynamoDB\",\"action\":\"batchWriteItem\",\"parameters\":{\"RequestItems\":{\"",
+       {
+        "Ref": "CinemasTableA8D14F5B"
+       },
+       "\":[{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1001\"},\"movieId\":{\"S\":\"f5001\"},\"movieTitle\":{\"S\":\"A Minecraft Movie\"},\"period\":{\"S\":\"Mar25\"},\"city\":{\"S\":\"Waterford\"}}}},{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1001\"},\"movieId\":{\"S\":\"c5002\"},\"movieTitle\":{\"S\":\"Snow White\"},\"period\":{\"S\":\"Apr25\"},\"city\":{\"S\":\"Waterford\"}}}},{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1001\"},\"movieId\":{\"S\":\"t5003\"},\"movieTitle\":{\"S\":\"The Amauret\"},\"period\":{\"S\":\"May25\"},\"city\":{\"S\":\"Waterford\"}}}},{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1002\"},\"movieId\":{\"S\":\"f5001\"},\"movieTitle\":{\"S\":\"A Minecraft Movie\"},\"period\":{\"S\":\"Feb25\"},\"city\":{\"S\":\"Cork\"}}}},{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1002\"},\"movieId\":{\"S\":\"t5004\"},\"movieTitle\":{\"S\":\"Novocaine\"},\"period\":{\"S\":\"Mar25\"},\"city\":{\"S\":\"Cork\"}}}},{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1002\"},\"movieId\":{\"S\":\"r5005\"},\"movieTitle\":{\"S\":\"Four Mothers\"},\"period\":{\"S\":\"Apr25\"},\"city\":{\"S\":\"Cork\"}}}},{\"PutRequest\":{\"Item\":{\"cinemaId\":{\"N\":\"1002\"},\"movieId\":{\"S\":\"c5002\"},\"movieTitle\":{\"S\":\"Snow White\"},\"period\":{\"S\":\"May25\"},\"city\":{\"S\":\"Cork\"}}}}]}},\"physicalResourceId\":{\"id\":\"moviesddbInitData\"}}"
+      ]
+     ]
+    },
+    "InstallLatestAwsSdk": false
+   },
+   "DependsOn": [
+    "moviesddbInitDataCustomResourcePolicyA35F01DC"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/moviesddbInitData/Resource/Default"
+   }
+  },
+  "moviesddbInitDataCustomResourcePolicyA35F01DC": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "dynamodb:BatchWriteItem",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CinemasTableA8D14F5B",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "moviesddbInitDataCustomResourcePolicyA35F01DC",
+    "Roles": [
+     {
+      "Ref": "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/moviesddbInitData/CustomResourcePolicy/Resource"
+   }
+  },
+  "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/AWS679f53fac002430cb0da5b7982bd2287/ServiceRole/Resource"
+   }
+  },
+  "AWS679f53fac002430cb0da5b7982bd22872D164C4C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-eu-west-1"
+     },
+     "S3Key": "ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 120
+   },
+   "DependsOn": [
+    "AWS679f53fac002430cb0da5b7982bd2287ServiceRoleC1EA0FF2"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/AWS679f53fac002430cb0da5b7982bd2287/Resource",
+    "aws:asset:path": "asset.ce2f3595a340d6c519a65888ef97e3b9b64f053f83608e32cc28162e22d7d99a",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ExamAPI63B17091": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "Exam api",
+    "Name": "ExamAPI"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/ExamAPI/Resource"
+   }
+  },
+  "ExamAPIDeployment1ED01478f4b16330af97116c49c261cfb7141f39": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Exam api",
+    "RestApiId": {
+     "Ref": "ExamAPI63B17091"
+    }
+   },
+   "DependsOn": [
+    "ExamAPIOPTIONSCE6E16D1"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/ExamAPI/Deployment/Resource"
+   }
+  },
+  "ExamAPIDeploymentStagedevA9C536BC": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "ExamAPIDeployment1ED01478f4b16330af97116c49c261cfb7141f39"
+    },
+    "RestApiId": {
+     "Ref": "ExamAPI63B17091"
+    },
+    "StageName": "dev"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/ExamAPI/DeploymentStage.dev/Resource"
+   }
+  },
+  "ExamAPIOPTIONSCE6E16D1": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST,PUT,PATCH,DELETE'",
+        "method.response.header.Access-Control-Allow-Credentials": "'true'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true,
+       "method.response.header.Access-Control-Allow-Credentials": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "ExamAPI63B17091",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "ExamAPI63B17091"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/ExamAPI/Default/OPTIONS/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/12QW2+DMAyFf0vfg9dSadsr7bS3XUT3jkxwWbgkCDtDCPHfJ0LHpj2dz8exfZQYDg/3sN/hwJEu6qgxOUwXQV0rHDibitFi64ocpg/MG1Lnqw0wqwbbvMDMuoIqhtcgz95qMc4qgy1MqVsHgr67xuhxKVeaFR8zZCZhSBZRfIST1zXJCZlu62E6X+229WJs2ZC4X+cHZoWdKVFowBGmlFiSzoTbN3yirnFjS1YW9091ESxDyhVSYud7TSHDC8mnK5bmSvO89VXIvMwYWyrtWVyb9bcmQzLwOXjb+/9liLbxm5fOy6yW34SK777iPRweId5VbEzUeyumJUhX/QZyk6+GtAEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ExamStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ExamAPIEndpointC98E4005": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ExamAPI63B17091"
+      },
+      ".execute-api.eu-west-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ExamAPIDeploymentStagedevA9C536BC"
+      },
+      "/"
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
