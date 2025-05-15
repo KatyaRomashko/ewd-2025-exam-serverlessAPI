@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "CinemaSchedule": {
+            "additionalProperties": false,
+            "properties": {
+                "cinemaId": {
+                    "type": "number"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "movieId": {
+                    "type": "string"
+                },
+                "movieTitle": {
+                    "type": "string"
+                },
+                "period": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "cinemaId",
+                "city",
+                "movieId",
+                "movieTitle",
+                "period"
+            ],
+            "type": "object"
+        }
+    }
+}
+
